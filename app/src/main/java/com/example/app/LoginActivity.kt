@@ -2,23 +2,23 @@ package com.example.app
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.example.app.ApiClient.RequestToClient
+import com.example.app.Models.LoginResponse
 import com.example.app.databinding.ActivityLoginBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import com.example.app.ApiClient.RequestToClient
-import com.example.app.Models.LoginResponse
-import com.example.app.Storage.SharedPrefManager
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(binding.root)
 
+        Log.d("login", "login start")
         binding.LoginBtn.setOnClickListener()
         {
             val username = binding.editTextTextPersonName.text.toString().trim()
@@ -26,35 +26,38 @@ class LoginActivity : AppCompatActivity() {
 
             if (username.isEmpty())
             {
+                Log.d("username", "username is empty")
                 binding.editTextTextPersonName.error = "Username or email required !"
                 binding.editTextTextPersonName.requestFocus()
                 return@setOnClickListener
             }
             if (password.isEmpty())
             {
+                Log.d("password", "password is empty")
                 binding.passwordToggle.error = "Password required !"
                 binding.passwordToggle.requestFocus()
                 return@setOnClickListener
             }
-            RequestToClient.instance.userLogin(username, password)
+            RequestToClient.instance.userLogin()
                 .enqueue(object: Callback<LoginResponse>{
                     override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                        Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
+                        println(t.message)
+                        println("on failure *********************************************************************")
+//                        Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
                     }
 
                     override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                        if(!response.body()?.error!!){
+                        if(response.body()?.header?.code == 200){
+                            print(response.body())
+                            println("on response *********************************************************************")
+//                            SharedPrefManager.getInstance(applicationContext).saveUser(response.body()?.user!!)
 
-                            SharedPrefManager.getInstance(applicationContext).saveUser(response.body()?.user!!)
-
-                            val intent = Intent(applicationContext, MainActivity::class.java)
+                            val intent = Intent(applicationContext, ProfileActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-
                             startActivity(intent)
-
-
                         }else{
-                            Toast.makeText(applicationContext, response.body()?.message, Toast.LENGTH_LONG).show()
+                            Log.d("500", "error !!! ")
+                            //Toast.makeText(applicationContext, response.body()?.message, Toast.LENGTH_LONG).show()
                         }
 
                     }
@@ -63,14 +66,14 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        if(SharedPrefManager.getInstance(this).isLoggedIn){
-            val intent = Intent(applicationContext, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-
-            startActivity(intent)
-        }
-    }
+//    override fun onStart() {
+//        super.onStart()
+//
+//        if(SharedPrefManager.getInstance(this).isLoggedIn){
+//            val intent = Intent(applicationContext, ProfileActivity::class.java)
+//            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+//
+//            startActivity(intent)
+//        }
+//    }
 }

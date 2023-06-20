@@ -1,5 +1,6 @@
 package com.example.app.Storage
 
+import android.annotation.SuppressLint
 import android.content.Context
 import com.example.app.Models.User
 
@@ -8,21 +9,20 @@ class SharedPrefManager private constructor(private val mCtx: Context) {
     val isLoggedIn: Boolean
         get() {
             val sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
-            return sharedPreferences.getInt("id", -1) != -1
+            return sharedPreferences.getString("token", null) != null
         }
 
     val user: User
         get() {
             val sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
             return User(
-                sharedPreferences.getString("token", -1),
-                sharedPreferences.getString("email", null),
-                sharedPreferences.getString("socialReason", null),
-                sharedPreferences.getString("socialReason", null)
-                sharedPreferences.getString("session_id", null)
+                sharedPreferences.getString("token", null).toString(),
+                sharedPreferences.getString("email", null).toString(),
+                sharedPreferences.getString("socialReason", null).toString(),
+                sharedPreferences.getString("socialReason", null).toString(),
+                sharedPreferences.getString("session_id", null).toString()
             )
         }
-
 
     fun saveUser(user: User) {
 
@@ -48,6 +48,7 @@ class SharedPrefManager private constructor(private val mCtx: Context) {
 
     companion object {
         private val SHARED_PREF_NAME = "my_shared_preff"
+        @SuppressLint("StaticFieldLeak")
         private var mInstance: SharedPrefManager? = null
         @Synchronized
         fun getInstance(mCtx: Context): SharedPrefManager {
