@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.app.ApiClient.RequestToClient
 import com.example.app.Models.LoginResponse
+import com.example.app.Storage.SharedPrefManager
 import com.example.app.databinding.ActivityLoginBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -66,14 +67,13 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-//    override fun onStart() {
-//        super.onStart()
-//
-//        if(SharedPrefManager.getInstance(this).isLoggedIn){
-//            val intent = Intent(applicationContext, ProfileActivity::class.java)
-//            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-//
-//            startActivity(intent)
-//        }
-//    }
+    override fun onStart() {
+        super.onStart()
+        if(SharedPrefManager.getInstance(this).isLoggedIn){
+            println("thats on start function *********************************************************************")
+            val intent = Intent(applicationContext, ProfileActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+        }
+    }
 }

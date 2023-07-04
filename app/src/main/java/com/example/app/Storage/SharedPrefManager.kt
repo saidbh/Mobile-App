@@ -47,7 +47,7 @@ class SharedPrefManager private constructor(private val mCtx: Context) {
     }
 
     companion object {
-        private val SHARED_PREF_NAME = "my_shared_preff"
+        private val SHARED_PREF_NAME = "chat"
         @SuppressLint("StaticFieldLeak")
         private var mInstance: SharedPrefManager? = null
         @Synchronized
