@@ -2,6 +2,7 @@ package com.example.app.Storage
 
 import android.annotation.SuppressLint
 import android.content.Context
+import com.example.app.Models.LoginResponse
 import com.example.app.Models.User
 
 class SharedPrefManager private constructor(private val mCtx: Context) {
@@ -24,7 +25,7 @@ class SharedPrefManager private constructor(private val mCtx: Context) {
             )
         }
 
-    fun saveUser(user: User) {
+    fun saveUser(user: LoginResponse) {
 
         val sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
@@ -33,7 +34,7 @@ class SharedPrefManager private constructor(private val mCtx: Context) {
         editor.putString("email", user.email)
         editor.putString("socialReason", user.socialReason)
         editor.putString("billingAccount", user.billingAccount)
-        editor.putString("session_id", user.session_id)
+        editor.putString("session_id", user.sessionId)
 
         editor.apply()
 
