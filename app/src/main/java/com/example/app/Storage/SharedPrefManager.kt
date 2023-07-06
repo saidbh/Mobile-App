@@ -35,9 +35,7 @@ class SharedPrefManager private constructor(private val mCtx: Context) {
         editor.putString("socialReason", user.socialReason)
         editor.putString("billingAccount", user.billingAccount)
         editor.putString("session_id", user.sessionId)
-
         editor.apply()
-
     }
 
     fun clear() {
